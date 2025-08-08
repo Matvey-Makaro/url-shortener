@@ -7,11 +7,12 @@ import (
 	"net/http"
 
 	"github.com/Matvey-Makaro/url-shortener/internal/lib/api/response"
-	"github.com/Matvey-Makaro/url-shortener/internal/logger/sl"
+	"github.com/Matvey-Makaro/url-shortener/internal/lib/logger/sl"
 	"github.com/Matvey-Makaro/url-shortener/internal/storage"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator"
+	_ "github.com/vektra/mockery"
 )
 
 type Request struct {

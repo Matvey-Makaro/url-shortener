@@ -8,7 +8,8 @@ import (
 	"github.com/Matvey-Makaro/url-shortener/internal/config"
 	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "github.com/Matvey-Makaro/url-shortener/internal/http-server/middleware/logger"
-	"github.com/Matvey-Makaro/url-shortener/internal/logger/sl"
+	"github.com/Matvey-Makaro/url-shortener/internal/lib/logger/handlers/slogpretty"
+	"github.com/Matvey-Makaro/url-shortener/internal/lib/logger/sl"
 	"github.com/Matvey-Makaro/url-shortener/internal/storage/sqlite"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
@@ -60,8 +61,7 @@ func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 	switch env {
 	case envLocal:
-		log = slog.New(
-			slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
+		log = setupPrettySlog()
 	case envDev:
 		log = slog.New(
 			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
@@ -70,4 +70,15 @@ func setupLogger(env string) *slog.Logger {
 			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	}
 	return log
+}
+
+func setupPrettySlog() *slog.Logger {
+	opts := slogpretty.PrettyHandlerOptions{
+		SlogOpts: &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		},
+	}
+
+	handler := opts.NewPrettyHandler(os.Stdout)
+	return slog.New(handler)
 }
