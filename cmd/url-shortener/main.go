@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Matvey-Makaro/url-shortener/internal/config"
+	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/redirect"
 	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "github.com/Matvey-Makaro/url-shortener/internal/http-server/middleware/logger"
 	"github.com/Matvey-Makaro/url-shortener/internal/lib/logger/handlers/slogpretty"
@@ -28,7 +29,6 @@ func main() {
 	log.Info("starting url-shortener", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
 
-	// TODO: Init storage
 	storage, err := sqlite.NewStorage(cfg.StoragePath)
 	if err != nil {
 		log.Error("failed to init storage", sl.Err(err))
@@ -42,6 +42,9 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
+
+	// TODO: DELETE Handler
 
 	log.Info("starting server", slog.String("address", cfg.Address))
 	srv := &http.Server{
