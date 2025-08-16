@@ -27,9 +27,15 @@ jobs:
       - name: Build app
         run: |
           go build -o url-shortener ./cmd/url-shortener
+      - name: Check SQLite version
+        run: sqlite3 --version
+      - name: Create db
+      - run: |
+          mkdir storage
+          cd storage
+          sqlite3 storage.db
       - name: Run app
         run: |
-
           ./url-shortener
       - name: Run tests
         run: |
