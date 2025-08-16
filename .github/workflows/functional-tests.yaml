@@ -11,7 +11,7 @@ jobs:
     env:
       CONFIG_PATH: ./config/dev.yaml
       ENV_FILE_PATH: ./config.env
-      HTTP_SERVER_PASSWORD ${{ secrets.AUTH_PASS }}
+      HTTP_SERVER_PASSWORD: ${{ secrets.AUTH_PASS }}
 
     steps:
       - name: Checkout code
