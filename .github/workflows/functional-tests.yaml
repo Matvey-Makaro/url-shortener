@@ -6,11 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  server:
+
   run-functional-tests:
     runs-on: ubuntu-latest
     env:
       CONFIG_PATH: ./config/dev.yaml
-      ENV_FILE_PATH: ./config.env
       HTTP_SERVER_PASSWORD: ${{ secrets.AUTH_PASS }}
 
     steps:
@@ -36,7 +37,7 @@ jobs:
           sqlite3 storage.db
       - name: Run app
         run: |
-          ./url-shortener
+          ./url-shortener &
       - name: Run tests
         run: |
           cd tests
