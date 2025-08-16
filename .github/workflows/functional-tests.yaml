@@ -11,6 +11,7 @@ jobs:
     env:
       CONFIG_PATH: ./config/dev.yaml
       ENV_FILE_PATH: ./config.env
+      HTTP_SERVER_PASSWORD ${{ secrets.AUTH_PASS }}
 
     steps:
       - name: Checkout code
@@ -26,11 +27,9 @@ jobs:
       - name: Build app
         run: |
           go build -o url-shortener ./cmd/url-shortener
-      - name: Set password
-        run: |
-          export HTTP_SERVER_PASSWORD=${{ secrets.AUTH_PASS }}
       - name: Run app
         run: |
+
           ./url-shortener
       - name: Run tests
         run: |
