@@ -1,0 +1,41 @@
+name: Functional tests
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  run-functional-tests:
+    runs-on: ubuntu-latest
+    env:
+      CONFIG_PATH: ./config/dev.yaml
+      ENV_FILE_PATH: ./config.env
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4 
+        with:
+          go-version: 1.24.5
+      - name: Install dependencies
+        run: |
+          go mod download
+      - name: Build app
+        run: |
+          go build -o url-shortener ./cmd/url-shortener
+      - name: Set password
+        run: |
+          export HTTP_SERVER_PASSWORD=${{ secrets.AUTH_PASS }}
+      - name: Run app
+        run: |
+          ./url-shortener
+      - name: Run tests
+        run: |
+          cd tests
+          go test
+      
+
+    
