@@ -30,7 +30,7 @@ jobs:
       - name: Check SQLite version
         run: sqlite3 --version
       - name: Create db
-      - run: |
+        run: |
           mkdir storage
           cd storage
           sqlite3 storage.db
