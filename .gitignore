@@ -36,5 +36,5 @@ go.work.sum
 storage/*
 
 #config
-config/*
+config/local.yaml
 
