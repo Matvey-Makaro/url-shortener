@@ -15,3 +15,7 @@ packages:
   github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/save:
     config:
       all: true
+  github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/redirect:
+    config:
+      all: true
+  

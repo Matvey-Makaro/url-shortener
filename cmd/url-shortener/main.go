@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Matvey-Makaro/url-shortener/internal/config"
+	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/delete"
 	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/redirect"
 	"github.com/Matvey-Makaro/url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "github.com/Matvey-Makaro/url-shortener/internal/http-server/middleware/logger"
@@ -41,10 +42,17 @@ func main() {
 	router.Use(mwLogger.New(log))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
-	router.Post("/url", save.New(log, storage))
-	router.Get("/{alias}", redirect.New(log, storage))
 
-	// TODO: DELETE Handler
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("url-shortener", map[string]string{
+			cfg.HTTPServer.User: cfg.HTTPServer.Password,
+		}))
+
+		r.Post("/", save.New(log, storage))
+		r.Delete("/", delete.New(log, storage))
+	})
+
+	router.Get("/{alias}", redirect.New(log, storage))
 
 	log.Info("starting server", slog.String("address", cfg.Address))
 	srv := &http.Server{
