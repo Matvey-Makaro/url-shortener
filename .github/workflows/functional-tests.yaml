@@ -33,9 +33,9 @@ jobs:
           mkdir storage
           cd storage
           sqlite3 storage.db
+          cd ..
       - name: Run app
-        run: |
-          ./url-shortener &
+        run: ./url-shortener &
       - name: Run tests
         run: go test ./tests/
       
