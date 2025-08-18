@@ -37,6 +37,8 @@ jobs:
       - name: Run app
         run: ./url-shortener &
       - name: Run tests
+        env: 
+          CONFIG_PATH: ../config/dev.yaml
         run: go test ./tests/
       
 
